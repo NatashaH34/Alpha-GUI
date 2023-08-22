@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <!--https://code.jquery.com/jquery-3.4.0.js-->
+    <script src="../static/js/jquery-3.4.0.js"></script>
+    <!--https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css-->
+    <link href="../static/css/select2.min.css" rel="stylesheet">
+    <!--https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js-->
+    <script src="../static/js/select2.min.js"></script>
+    <script src="../static/js/LaunchGUI.js"></script>
+
+    <style>
+        .Nav-menu{
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .Nav-menu li{
+            float: left;
+        }
+
+        .Nav-menu li a{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 17px;
+            text-decoration: none;
+        }
+
+        .Nav-menu li a:hover {
+            background-color: red;
+        }
+
+        @media screen and (max-width:500px) {
+            .Nav-menu li{
+                float: none
+            }
+        }
+
+        .round-border {
+            border-radius: 1rem !important;
+        }
+
+        .bg-alphablue {
+            background-color: #5e5efe !important;
+        }
+
+        .bg-main {
+            background-color: #e8e7f5 !important;
+        }
+
+        .text-alpha{
+            color: #57b9ff !important;
+        }
+
+        .text-dark{
+            color: #343a40 !important;
+        }
+
+        .selects{
+        }
+
+        .upgrade{
+        }
+
+        .upgradeDesigner{
+        }
+
+        .upgradeTopology{
+        }
+
+        .topology{
+        }
+
+        .testSuite{
+        }
+    </style>
+
+    <title>Title</title>
+</head>
+<body class="bg-light text-dark" onload="getJobfile()">
+<div class="text-dark my-3 row">
+    <div class = "col-1">
+    </div>
+    <div class="float-left">
+        <img src="../images/ApetureTrueRound3x.png" style="width:65px;height:60px;" alt="Logos">
+<!--        <ul class="Nav-menu pb-1">-->
+<!--            <li><a href="#home">Home</a></li>-->
+<!--            <li><a href="#news">News</a></li>-->
+<!--            <li><a href="#contact">Contact</a></li>-->
+<!--            <li><a href="#about">About</a></li>-->
+<!--        </ul>-->
+    </div>
+    <div class="ml-3 mt-2 text-alpha">
+        <h1 class="display-4" style="font-size: 36px"> Project Alpha </h1>
+    </div>
+</div>
+
+<div class="float-right mt-1 col-lg-3 mx-4">
+    <label for="launchSettings" class="px-4" style="font-size: large">Launch Settings:</label>
+    <div id ="launchSettings" class="round-border shadow text-white py-3 px-2 bg-alphablue">
+        <div class="px-4 mt-2 form-group">
+            <div class="mt-2">
+                <label for="launchsim">Launch sim:</label>
+                <select class="form-control" id="launchsim">
+                    <option>yes</option>
+                    <option>no</option>
+                </select>
+            </div>
+            <div class="mt-2">
+                <label for="killsim">Kill sim after test:</label>
+                <select class="form-control" id="killsim">
+                    <option>no</option>
+                    <option>yes</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pl-4 mt-3 form-group col-lg-3">
+    <label for="Settings" class="px-4" style="font-size: large"> Workflow:</label>
+    <div id="Settings" class="round-border shadow text-white py-3 bg-alphablue">
+        <div class="px-3 mt-2 form-group">
+            <div class="col-lg-6">
+                <div class="mt-2">
+                    <div>
+                        
+                    
+                </div>
+            <div class="col-lg-6">
+                <div class="mt-2">
+                    <label for="configdrop">Run Type:</label>
+                    <select class="form-control" id="configdrop" onchange="changeLayout()">
+                        <option disabled selected value> -- select an option --</option>
+                        <option value="upgrade">Upgrade Test</option>
+                        <option value="devtest">Devtest</option>
+                        <option value="topology">Topology</option>
+                        <option value="test">Test</option>
+                    </select>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" value="" id="provision_device">
+                        <label class="form-check-label" for="provision_device">
+                            Provision Device
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<div class="float-right mt-2 col-lg-3 mx-4">
+    <div id="launchSettings2" class="round-border shadow text-white py-3 px-2 bg-alphablue">
+        <div class="px-4 mt-3 form-group">
+            <div class="mt-2">
+                <label for="build">Build type and release:</label>
+                <select class="form-control" id="build">
+                    <option disabled selected value> select a build type </option>
+                    <option>ebuild</option>
+                    <option>designer</option>
+                </select>
+            </div>
+            <div class="input-group mt-2">
+                <select class="form-control" id="launchRelease">
+                    <option disabled selected value> select a release </option>
+                    <option>1330</option>
+                    <option>1400</option>
+                </select>
+                <input type="text" class="form-control" id="launchBaseline" placeholder="Baseline">
+                <button class="btn btn-primary" onclick="auto_fill_release()">Auto fill</button>
+            </div>
+            <div class="mt-2">
+                <label for="potspath">Workspace pots path:</label>
+                <input type="text" class="form-control" id="potspath" placeholder="POTS path">
+            </div>
+            <div class="mt-2">
+                <label for="ptspath">Workspace pts path:</label>
+                <input type="text" class="form-control" id="ptspath" placeholder="PTS path">
+            </div>
+            <div class="mt-2">
+                <label for="email">Email:</label>
+                <input type="text" class="form-control" id="email" placeholder="email">
+            </div>
+            <div class="mt-2">
+                <label for="email_subject">Email Subject:</label>
+                <input type="text" class="form-control" id="email_subject" placeholder="email subject">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pl-4 form-group col-lg-4 selects testSuite">
+    <label for="testdrop">Test suite:</label>
+    <select class="form-control multy" style="width: 100%" id="testdrop" multiple="">
+    </select>
+</div>
+
+<div class="pl-4 col-lg-4 form-group selects upgrade">
+    <label for="releaseBaseline">Upgrade formal "From" (separated by commas):</label>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="releaseBaseline" placeholder="Ex: 1330MX, 1330MB">
+    </div>
+    <label for="releaseToBaseline">Upgrade formal "To":</label>
+    <div class="input-group">
+        <input type="text" class="form-control" id="releaseToBaseline" placeholder="Ex: 1400UT">
+    </div>
+</div>
+
+<div class="pl-4 col-lg-4 form-group selects upgradeDesigner">
+    <div class="mb-3">
+        <label for="releaseDesigner">Upgrade Designer "From":</label>
+        <input type="text" class="form-control" id="releaseDesigner">
+    </div>
+    <div>
+        <label for="releaseToDesigner">Upgrade Designer "To":</label>
+        <input type="text" class="form-control" id="releaseToDesigner">
+    </div>
+</div>
+
+<div class="pl-4 col-lg-4 form-group selects topology">
+    <div class="mb-3">
+        <label for="topodrop">Topology:</label>
+        <select class="form-control multy" style="width: 100%" id="topodrop" onchange="change_topology_layout()">
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="topo_confirm">Use Config:</label>
+        <select class="form-control" id="topo_confirm" onchange="change_topology_layout()">
+            <option>yes</option>
+            <option selected value>no</option>
+        </select>
+    </div>
+    <div id="topoconfig_group" class="round-border text-white py-3 bg-secondary">
+        <div class="px-3">
+            <div>
+                <label for="topoprofile">Profile:</label>
+                <select class="form-control" id="topoprofile" onchange="change_topology_config_layout()">
+                </select>
+            </div>
+            <div id="topoconfig">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pl-4 col-lg-4 form-group selects upgradeTopology">
+    <label for="selectTopoNode">Nodes to Upgrade:</label>
+    <select class="form-control multy" style="width: 100%" id="selectTopoNode" multiple = "multiple">
+        <option>SIM1</option>
+        <option>SIM2</option>
+        <option>SIM3</option>
+        <option>SIM4</option>
+        <option>SIM5</option>
+        <option>SIM6</option>
+    </select>
+</div>
+
+<div class="pl-4 col-lg-4 form-group">
+    <div class="mt-2">
+        <label for="dump_log">Dump logs directory:</label>
+        <input type="text" class="form-control" id="dump_log" placeholder="/nfs/projects/alpha">
+    </div>
+    <div class="form-check mt-2">
+        <input class="form-check-input" type="checkbox" value="" id="ctf_traces">
+        <label class="form-check-label" for="ctf_traces">
+            Collect CTF traces
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="saos_logs">
+        <label class="form-check-label" for="saos_logs">
+            Collect SAOS logs
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="rtrv_logs">
+        <label class="form-check-label" for="rtrv_logs">
+            Collect RTRV logs
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="stop_on_failure">
+        <label class="form-check-label" for="stop_on_failure">
+            Stop on failure
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="pause_on_failure">
+        <label class="form-check-label" for="pause_on_failure">
+            Pause on failure
+        </label>
+    </div>
+</div>
+
+<div class="pl-4 col-lg-4 form-group selects">
+    <label for="craft">Craft:</label>
+    <div class="mb-3">
+        <select class="form-control" id="craft">
+            <option>yes</option>
+            <option>no</option>
+        </select>
+    </div>
+    <div>
+        <label for="minimal">Minimal:</label>
+        <select class="form-control" id="minimal">
+            <option>yes</option>
+            <option>no</option>
+        </select>
+    </div>
+</div>
+
+<!--<button class="m-4" onclick="testFunction()">Run Test</button>-->
+<button class="m-4 btn btn-primary" onclick="createJobfile()">Run Test</button>
+<p class="pl-4" id="results"></p>
+<p class="pl-4" id="jobfile"></p>
+<p class="pl-4" id="sentjobfile"></p>
+
+</body>
+</html>
